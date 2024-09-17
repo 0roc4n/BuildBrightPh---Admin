@@ -1,0 +1,15 @@
+ion-grid {
+  &.center-grid {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) !important;
+      display: block !important;
+      width: -webkit-fill-available;
+      min-width: 380px;
+  }
+}
+
+// ion-item::part(native){
+//   padding:0;
+// }

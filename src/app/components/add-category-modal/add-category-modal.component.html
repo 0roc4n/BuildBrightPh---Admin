@@ -1,0 +1,86 @@
+<ion-content [formGroup]="addCategoryForm" >
+  <ion-grid style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <ion-row >
+      <ion-col size="6" style="display: flex; align-items: end; justify-content: center; flex-direction: column;">
+        <app-file-picker fcName="image" [single]="true">
+        </app-file-picker>
+        <div *ngIf="this.addCategoryForm.get('image')?.invalid" style="color: red; text-align: center; width: 100%;">Image is required</div>
+      </ion-col>
+      <ion-col size="6" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <app-file-picker [labelTag]="'Upload Icon'" fcName="icon" [single]="true">
+        </app-file-picker>
+        <div *ngIf="this.addCategoryForm.get('icon')?.invalid" style="color: red; text-align: center; width: 100%;">Image is required</div>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row style="width: 100%">
+      <ion-col>
+        <ion-item fill="outline" mode="md">
+          <ion-label position="stacked">Category Name</ion-label>
+          <ion-input clearInput="true" formControlName="name" type="text"></ion-input>
+        </ion-item>
+
+      </ion-col>
+    </ion-row>
+
+
+    <!-- <ion-row style="width: 100%">
+
+      <ion-col size="12" style="display: flex; justify-content: center;">
+        <ion-button (click)="addSubcategory()">
+          Add Subcategory
+        </ion-button>
+      </ion-col>
+    </ion-row> -->
+
+    <ion-row  style="width: 100%;">
+      <ion-col size="6">
+        <ion-item  style="align-items: center;" >
+          <h3 style="font-weight: bold;">
+            Subcategories
+          </h3> 
+        </ion-item>
+      </ion-col>
+       <ion-col size="6" style="display: flex; justify-content: end;">
+        <ion-button (click)="addSubcategory()">
+          Add Subcategory
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    
+
+    <ion-row style="width: 100%;height: 100%;flex:1; display: flex; flex-direction: column; overflow-y: auto;"> 
+      <ion-col size="12">
+        <ion-list  style="flex:1;width: 100%; height: 100%; overflow-y: auto; user-select: none;">
+          <ion-item *ngFor="let sub of getSubForm().controls; let i = index">
+            <div [formGroup]="getFormGroup(i)"  style="display: flex; justify-content: space-between; width: 100%;">
+              <ion-item lines="none">
+                <ion-label position="stacked" >Name</ion-label>
+                <ion-input formControlName="name" type="string" inputmode="string"></ion-input>
+              </ion-item>
+              <!-- <ion-text style="display: flex; align-items: center;">
+                {{sub.name}}
+              </ion-text> -->
+              <ion-button (click)="removeSubcategory(i)" color="secondary" >
+                Delete
+              </ion-button> 
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button (click)="dismissModal()" expand="block" color="danger">
+          Cancel
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="submit()" expand="block" [disabled]="!addCategoryForm.valid">
+          {{category ? "Save":"Submit"}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

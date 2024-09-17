@@ -1,0 +1,90 @@
+
+<ion-content>
+  <ion-header>
+    <ion-button (click)="dismissModal()" fill="clear">
+      Dismiss
+    </ion-button>
+  </ion-header>
+  <ng-container [formGroup]="addVoucherGroup">
+    <ion-row>
+      <ion-col size="12" size-lg="6" class="ion-padding"> 
+        <ion-item fill="outline" mode="md">
+          <ion-label position="floating">Voucher Code<ion-text color="danger">*</ion-text></ion-label>
+          <ion-input placeholder="Code..." formControlName="voucherCode"></ion-input>
+        </ion-item>
+      </ion-col>
+   
+      <ion-col size="12" size-lg="6" class="ion-padding">
+        <ion-item lines="none" fill="outline">
+          <ion-label>Voucher Expiry Date<ion-text color="danger">*</ion-text></ion-label>
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime [showDefaultButtons]="true" presentation="date" id="datetime" [min]="dateToday" formControlName="voucherExpiry"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-lg="6" class="ion-padding">
+        <ion-list>
+          <ion-list-header>
+            <ion-label>Discount Type</ion-label>
+          </ion-list-header>
+          <ion-radio-group formControlName="voucherDiscountType">
+            <ion-item mode="md" lines="none">
+              <ion-label>Percentage</ion-label>
+              <ion-radio slot="end" value="percentage"></ion-radio>
+            </ion-item>
+        
+            <ion-item mode="md" lines="none">
+              <ion-label>Flat</ion-label>
+              <ion-radio slot="end" value="flat"></ion-radio>
+            </ion-item>
+          </ion-radio-group>    
+        </ion-list>
+      </ion-col>
+      <ion-col size="12" size-lg="6" class="ion-padding" style="display: grid; align-content: center;">
+        <ion-item fill="outline" mode="md">
+          <ion-label position="floating">Discount Value<ion-text color="danger">*</ion-text></ion-label>
+          <ion-input type="number" formControlName="voucherDiscountValue"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-padding">
+        <ion-item fill="outline" mode="md">
+          <ion-label position="floating">Voucher Description</ion-label>
+          <ion-textarea [autoGrow]="true" formControlName="voucherDescription"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+
+
+
+  <ion-row class="ion-padding"> 
+    <ng-container *ngIf="editData; else add">
+      <ion-col size="6">
+        <ion-button (click)="deleteVoucher()" expand="block" color="secondary">
+          Delete Voucher
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="addVoucher()" [disabled]="!addVoucherGroup.valid" expand="block">
+          Edit Voucher
+        </ion-button>
+      </ion-col>
+    </ng-container>
+    <ng-template #add>
+      <ion-col size="12">
+        <ion-button (click)="addVoucher()" [disabled]="!addVoucherGroup.valid" expand="block">
+          Add Voucher
+        </ion-button>
+      </ion-col>
+    </ng-template>
+  </ion-row>
+
+
+</ion-content>

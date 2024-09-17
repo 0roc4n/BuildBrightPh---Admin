@@ -1,0 +1,115 @@
+<ion-header>
+  <app-toolbar-menu title="Profile">
+  </app-toolbar-menu>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ng-container *ngIf="(profile$| async) as profile">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>User Profile</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-text color="primary">
+          <h1>Fullname</h1>
+        </ion-text>
+        <ion-item>
+          <ion-label>
+            <h3>
+              First name
+            </h3>
+            <p>
+              {{profile.fullname.first}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <h3>
+              Middle initial
+            </h3>
+            <p>
+              {{profile.fullname.middleInitial}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <h3>
+              Last name
+            </h3>
+            <p>
+              {{profile.fullname.last}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-text color="primary">
+          <h1 style="padding-top: 20px;">IDs</h1>
+        </ion-text>
+        <ion-row *ngFor="let id of profile.ids">
+          <ion-col size="6" size-md="3">
+            <ion-img [src]="id.front"></ion-img>
+          </ion-col>
+          <ion-col size="6" size-md="3">
+            <ion-img [src]="id.back"></ion-img>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <!-- <ion-card-subtitle>Awesome Subtitle</ion-card-subtitle> -->
+        <ion-card-title>Business Profile</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-text color="primary">
+          <h1> Store Name</h1>
+        </ion-text>
+        <ion-text color="primary">
+          <h3>{{profile.storeName}}</h3>
+        </ion-text>
+
+        <ion-text color="primary">
+          <h1 style="padding-top: 20px">Email</h1>
+        </ion-text>
+        <ion-text color="primary">
+          <h3>{{profile.email}}</h3>
+        </ion-text>
+
+        <ion-text color="primary">
+          <h1 style="padding-top: 20px">Facebook Link</h1>
+        </ion-text>
+        <ion-text color="primary">
+          <h3><a [href]="profile.facebookPermalink" target="_blank" style=" text-decoration: none;">{{profile.facebookPermalink}}</a></h3>
+        </ion-text>
+
+
+        <ion-text color="primary">
+          <h1 style="padding-top: 20px;"> Branches</h1>
+        </ion-text>
+        <ion-item *ngFor="let branch of profile.branches" detail="true" button (click)="coordinates = branch.coordinates">
+          <ion-label>
+            <h3>
+              Branch Name
+            </h3>
+            <p>
+              {{branch.branch_name}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ng-container *ngIf="coordinates">
+          <google-map [options]="mapOptions" height="300px" width="100%" [center]="coordinates" #map>
+            <map-marker
+              [position]="coordinates"
+              #currentMarker="mapMarker">
+            </map-marker>
+          </google-map>
+        </ng-container>
+        <ion-button (click)="addBranch(profile.branches.length)" expand="block">
+          Add Branch
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+</ion-content>

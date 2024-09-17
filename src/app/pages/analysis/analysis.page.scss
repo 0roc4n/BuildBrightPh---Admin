@@ -1,0 +1,33 @@
+.icon-container{
+  width            : 60px;
+  height           : 60px;
+  display          : flex;
+  justify-content  : center;
+  align-items      : center;
+  border-radius    : 100%;
+  color            : #ffffff;
+}
+.revenue-overview{
+  background-color : rgba(255, 255, 255, 0.2);
+  margin-right     : 30px;
+}
+
+.sales{
+  background-color : #4c95dd ;
+}
+
+.earnings{
+  background-color : #01b075 ;
+}
+
+.pending{
+  background-color : #634fd2;
+}
+
+
+.cancelled{
+  background-color : red;
+}
+
+
+

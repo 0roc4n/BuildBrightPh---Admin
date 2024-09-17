@@ -1,0 +1,58 @@
+<ion-header>
+  <app-toolbar-menu title="Reviews">
+  </app-toolbar-menu>
+</ion-header>
+<ion-content>
+
+  <ion-grid fixed>
+    <ion-row>
+      <ng-container *ngFor="let productReviews of (productReviews$ | async)">
+      <ion-col size="12" size-lg="4"  *ngIf="productReviews.productDetails">
+
+        <!-- <ion-card *ngIf="productReviews.productDetails.variants; else noVariant" button (click)="productReviewDetails(productReviews)"> -->
+     
+        <ion-card *ngIf="productReviews.productDetails.variants; else noVariant" button (click)="productReviewDetails(productReviews)">
+          <div style="display: flex; justify-content: center;">
+            <!-- <img [src]="productReviews.productDetails.variants[0].images[0].imageRef" style="max-height: 100px;"> -->
+            <img [src]="productReviews.reviews[0].image" style="max-height: 100px;">
+          </div>
+
+          <ion-card-content>
+            <h1>
+              {{productReviews.productDetails.name}}
+            </h1>
+            With Variants. Click for more details
+          </ion-card-content>
+        </ion-card>
+
+
+        <ng-template #noVariant>
+          <ion-card button (click)="productReviewDetails(productReviews)">
+            <div style="display: flex; justify-content: center;">
+              <!-- <img [src]="productReviews.productDetails.images[0].imageRef" style="max-height: 100px;"> -->
+              <img [src]="productReviews.reviews[0].image" style="max-height: 100px;">
+            </div>
+
+            <ion-card-content>
+              <h1>
+                {{productReviews.productDetails.name}}
+              </h1>
+
+              <app-rating [rating]="productReviews.productDetails.totalRating ?? 0" [outOf]="5" >
+              </app-rating>
+            </ion-card-content>
+          </ion-card>
+
+        </ng-template>
+      </ion-col>
+    </ng-container>
+    </ion-row>
+    
+  </ion-grid>
+
+
+
+
+
+
+</ion-content>

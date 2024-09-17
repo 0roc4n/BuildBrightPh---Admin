@@ -1,0 +1,97 @@
+
+<ion-header>
+  <app-toolbar-menu title="Product List">
+  </app-toolbar-menu>
+  <ion-toolbar color="primary">
+    <ion-searchbar placeholder="Search..."  style="padding: 0;" (ionChange)="onSearchChange($event)" [debounce]="150"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true" scrollbar>
+  <ion-row>
+    <ion-col size="auto">
+      <h1 class="ion-padding ion-no-margin" >
+        {{filter}}
+      </h1>
+    </ion-col>
+    <ion-col size="auto">
+      <ion-button (click)="deleteCategory()" *ngIf="showDeleteButton" color="secondary" style="display: flex; align-items: center;" >
+        Delete Category
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  
+  <ion-row style="padding-left:15px">
+    <ion-col *ngIf="categoryId==null"  size-md="6" size="12">
+      <ion-item fill="outline" mode="md">
+        <ion-label position="stacked">Categories</ion-label>
+        <ion-select  (ionChange)="filterByCategory($event)" placeholder="Filter by category" formControlName="category" interface="popover" >
+          <ion-select-option [value]="null">All</ion-select-option>
+          <ion-select-option *ngFor="let cat of (categories$ | async)" [value]="cat">{{cat.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size-md="6" size="12">
+      <ion-item fill="outline" mode="md">
+        <ion-label position="stacked">Subcategories</ion-label>
+        <ion-select (ionChange)="filterBySubcategory($event)"  [disabled]="!catergorySubcategories.length" placeholder="{{!catergorySubcategories.length?'No subcategories in selected category':'Filter by subcategory'}}" formControlName="category" interface="popover" >
+          <ion-select-option [value]="null">All</ion-select-option>
+          <ion-select-option *ngFor="let sub of catergorySubcategories" [value]="sub.id">{{sub.name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="3" size-sm="6" size="12"  style="display: flex; justify-content: center;" *ngFor="let productItem of (filteredProducts | slice:0:limit+1); let i = index">
+        <ion-card *ngIf="i < limit;else viewmore" style="min-width: 200px;width: 100%; height: 350px;">
+
+          <div style="height: 200px; padding: 10px;">
+            <ion-img [src]="getFirstImageRef(productItem)" style="--border-radius: 50%;height:100%;width: auto;"></ion-img>
+          </div>
+
+          <ion-card-header>
+            <ion-card-title>
+               <h4>{{productItem.name}}</h4></ion-card-title>
+            <ng-container *ngFor="let cat of  (categories$ | async)">
+              <ion-card-subtitle *ngIf="cat.id === productItem.category">{{cat.name}}</ion-card-subtitle>
+            </ng-container>
+
+          </ion-card-header>
+
+          <ion-card-content style="position: absolute; bottom: 0; width: 100%;">
+            <ion-row>
+              <ion-col size="6" style="display: flex; justify-content: center;" (click)="editProduct(productItem)">
+                  <ion-icon name="create" style="cursor: pointer;"></ion-icon>
+              </ion-col>
+              <!-- <ion-col size="4" style="display: flex; justify-content: center;" (click)="duplicateProduct(productItem)">
+                <ion-icon name="add-circle"  style="cursor: pointer;"></ion-icon>
+              </ion-col> -->
+              <ion-col size="6" style="display: flex; justify-content: center;" >
+                <ion-icon name="trash"  style="cursor: pointer;" (click)="deleteProductItem(productItem)"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+        
+        <ng-template #viewmore>
+          <ion-card (click)="loadMore()" style="width: 100%; height: 300px; display:flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;">
+            <h1>VIEW MORE</h1>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <!-- <ion-fab-button style="margin-bottom: 10px;" (click)="bulkUploader.click()">
+      <ion-icon name="albums-outline"></ion-icon>
+      <input hidden multiple #bulkUploader type="file" (change)="bulkUpload($event)">
+    </ion-fab-button> -->
+    <ion-fab-button (click)="goToAddProduct()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+
+

@@ -1,0 +1,139 @@
+<ion-header>
+  <app-toolbar-menu title="Quotation">
+  </app-toolbar-menu>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  
+  
+<ion-row>
+  <ion-col size="12" size-md="6">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Pending</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let pending of (pendingQuotations$ | async )" button (click)="quotationDetailsModal(pending)">
+        <ng-container *ngIf="pending.clientInfo as clientInfo">
+          <ion-avatar slot="start">
+            <img [src]="clientInfo.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h2 *ngIf="clientInfo.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}}.{{fullname.last}} 
+            </h2>
+            <p *ngFor="let item of pending.items">
+              <ng-container *ngIf="item.variants; else noVariant">
+                <ng-container *ngFor="let variant of item.variants">
+                  {{item.productDetails.name}} {{ item.productDetails.variants[variant.variantIndex].variant_name }} x {{ variant.quantity}}
+                </ng-container>
+              </ng-container>
+              <ng-template #noVariant>
+                {{item.productDetails.name}} x {{item.quantity}}
+              </ng-template>
+            </p>
+          </ion-label>
+        </ng-container>
+     
+      </ion-item>
+    </ion-list>
+  </ion-col>
+
+  <ion-col size="12" size-md="6">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Offered</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let offered of (offeredQuotatons$ | async )" button (click)="quotationDetailsModal(offered)">
+        <ng-container *ngIf="offered.clientInfo as clientInfo">
+          <ion-avatar slot="start">
+            <img [src]="clientInfo.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h2 *ngIf="clientInfo.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}}.{{fullname.last}} 
+            </h2>
+            <p *ngFor="let item of offered.items">
+              <ng-container *ngIf="item.variants; else noVariant">
+                <ng-container *ngFor="let variant of item.variants">
+                  {{item.productDetails.name}} {{ item.productDetails.variants[variant.variantIndex].variant_name }} x {{ variant.quantity}}
+                </ng-container>
+              </ng-container>
+              <ng-template #noVariant>
+                {{item.productDetails.name}} x {{item.quantity}}
+              </ng-template>
+            </p>
+          </ion-label>
+        </ng-container>
+      </ion-item>
+    </ion-list>    
+  </ion-col>
+
+
+
+  <ion-col size="12" size-md="6">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Declined</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let declined of (declinedQuotations$ | async )" button (click)="quotationDetailsModal(declined)">
+        <ng-container *ngIf="declined.clientInfo as clientInfo">
+          <ion-avatar slot="start">
+            <img [src]="clientInfo.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h2 *ngIf="clientInfo.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}}.{{fullname.last}} 
+            </h2>
+            <p *ngFor="let item of declined.items">
+              <ng-container *ngIf="item.variants; else noVariant">
+                <ng-container *ngFor="let variant of item.variants">
+                  {{item.productDetails.name}} {{ item.productDetails.variants[variant.variantIndex].variant_name }} x {{ variant.quantity}}
+                </ng-container>
+              </ng-container>
+              <ng-template #noVariant>
+                {{item.productDetails.name}} x {{item.quantity}}
+              </ng-template>
+            </p>
+          </ion-label>
+        </ng-container>
+      </ion-item>
+    </ion-list>    
+  </ion-col>
+
+  <ion-col size="12" size-md="6">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Approved</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let approved of (approvedQuotatons$ | async )" button (click)="quotationDetailsModal(approved)">
+        <ng-container *ngIf="approved.clientInfo as clientInfo">
+          <ion-avatar slot="start">
+            <img [src]="clientInfo.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h2 *ngIf="clientInfo.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}}.{{fullname.last}} 
+            </h2>
+            <p *ngFor="let item of approved.items">
+              <ng-container *ngIf="item.variants; else noVariant">
+                <ng-container *ngFor="let variant of item.variants">
+                  {{item.productDetails.name}} {{ item.productDetails.variants[variant.variantIndex].variant_name }} x {{ variant.quantity}}
+                </ng-container>
+              </ng-container>
+              <ng-template #noVariant>
+                {{item.productDetails.name}} x {{item.quantity}}
+              </ng-template>
+            </p>
+          </ion-label>
+        </ng-container>
+      </ion-item>
+    </ion-list>    
+  </ion-col>
+
+  
+
+</ion-row>
+
+
+
+</ion-content>

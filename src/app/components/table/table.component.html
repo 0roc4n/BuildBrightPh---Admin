@@ -1,0 +1,28 @@
+<ion-card style="margin :0;">
+  <div class="ion-padding">
+    <ion-card-header *ngIf="withSearch">
+      <ion-searchbar placeholder="Search Order" [debounce]="250" showCancelButton="focus" show-clear-button="focus"  (ionChange)="onSearchChange($event)"></ion-searchbar> <!---->
+    </ion-card-header>
+
+    <div style="overflow-x:auto;">
+      <table style="width: -webkit-fill-available;">
+        <thead>
+          <tr>
+            <th *ngFor="let head of headerArray" style="text-align: center; padding: 10px;">
+              {{head}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dataItem of dataForm">
+            <th *ngFor="let data of dataItem | filter:filter" style="text-align: center;"><!---->
+              {{data}}
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</ion-card>

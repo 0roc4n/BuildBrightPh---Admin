@@ -1,0 +1,229 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+        Back
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-text color="primary">
+    <h3 style="margin: 0;" class="ion-padding">
+      Personal Details
+    </h3>
+  </ion-text>
+
+  <ion-item lines="none">
+    <ion-avatar slot="start">
+      <ion-img [src]="userData.profilePic === '' ? 'assets/icon/no-avatar.svg' : userData.profilePic"></ion-img>
+    </ion-avatar>
+    <ion-label>
+      <h3>Full Name:</h3>
+      <p>
+        {{userData.fullname.first}} {{userData.fullname.middleInitial}} {{userData.fullname.last}}
+      </p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="none" detail="true" button (click)="goToLink(userData.facebookPermalink)">
+    <ion-label>
+      <h3>
+        Facebook Link
+      </h3>
+      <p>
+        {{userData.facebookPermalink}}
+      </p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label>
+      <h3>Email:</h3>
+      <p>
+        {{userData.email}}
+      </p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label>
+      <h3>Mobile Number:</h3>
+      <p>
+        {{userData.mobile_no}}
+      </p>
+    </ion-label>
+  </ion-item>
+
+  <ion-text color="primary">
+    <h3 style="margin: 0;" class="ion-padding">
+      Address
+    </h3>
+  </ion-text>
+  <ion-item lines="none" *ngFor="let address of userData.address" detail="true" button (click)="addressClick(address.coordinates)">
+    <ion-label>
+      <h3>
+        {{address.label}}
+      </h3>
+      <p>
+        {{address.completeAddress}}
+      </p>
+    </ion-label>
+  </ion-item>
+  <google-map [options]="mapOptions" height="300px" width="100%" [center]="clickedAddress" #map *ngIf="clickedAddress">
+    <map-marker
+      [position]="clickedAddress"
+      #currentMarker="mapMarker">
+    </map-marker>
+  </google-map>
+
+
+  <ng-container *ngIf="userData.userType === 'rider'; else notRider">
+    <ion-text color="primary">
+      <h3 style="margin: 0;" class="ion-padding">
+        License
+      </h3>
+    </ion-text>
+    <ion-row>
+      <ion-col size="6">
+        <ion-img [src]="userData.license.front"></ion-img>
+      </ion-col>
+      <ion-col size="6">
+        <ion-img [src]="userData.license.back"></ion-img>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-text color="primary">
+      <h3 style="margin: 0;" class="ion-padding">
+        Vehicle Details
+      </h3>
+    </ion-text>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          Brand
+        </h5>
+        <p>
+          {{userData.vehicleDetails.brand}}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          Capacity
+        </h5>
+        <p>
+          {{userData.vehicleDetails.capacity}}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          Model
+        </h5>
+        <p>
+          {{userData.vehicleDetails.model}}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          OR/CR
+        </h5>
+        <p>
+          {{userData.vehicleDetails.orCr}}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          Plate Number
+        </h5>
+        <p>
+          {{userData.vehicleDetails.plateNumber}}
+        </p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h5>
+          Type
+        </h5>
+        <p>
+          {{userData.vehicleDetails.type}}
+        </p>
+      </ion-label>
+
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>
+        <h2>
+          Dimensions
+        </h2>
+        <h3>
+          Length
+        </h3>
+        <p>
+          {{userData.vehicleDetails.size.length}}
+        </p>
+        <h3>
+          Width
+        </h3>
+        <p>
+          {{userData.vehicleDetails.size.width}}
+        </p>
+        <h3>
+          Height
+        </h3>
+        <p>
+          {{userData.vehicleDetails.size.height}}
+        </p>
+      </ion-label>
+    </ion-item>
+
+
+    <ion-text color="primary">
+      <h5 style="margin: 0;" class="ion-padding">
+        Vehicle Image
+      </h5>
+    </ion-text>
+    <ion-row>
+      <ion-col size="6" *ngFor="let vImage of userData.vehicleDetails.images">
+        <ion-img [src]="vImage"></ion-img>
+      </ion-col>
+    </ion-row>
+
+  </ng-container>
+
+  <ng-template #notRider>
+
+  <ion-text color="primary">
+    <h3 style="margin: 0;" class="ion-padding">
+      IDs
+    </h3>
+  </ion-text>
+    <ion-row *ngFor="let id of userData.ids">
+      <ion-col size="6" >
+        <ion-img [src]="id.front"></ion-img>
+      </ion-col>
+      <ion-col size="6" >
+        <ion-img [src]="id.back"></ion-img>
+      </ion-col>
+    </ion-row>
+  </ng-template>
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-button (click)="verifyUser()" expand="block">
+        Verify
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

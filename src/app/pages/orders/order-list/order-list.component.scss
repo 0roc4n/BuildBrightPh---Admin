@@ -1,0 +1,47 @@
+// .demo-table {
+//   width: 100%;
+// }
+
+// .mat-mdc-row .mat-mdc-cell {
+//   border-bottom: 1px solid transparent;
+//   border-top: 1px solid transparent;
+//   cursor: pointer;
+// }
+
+// .mat-mdc-row:hover .mat-mdc-cell {
+//   border-color: currentColor;
+// }
+
+// .demo-row-is-clicked {
+//   font-weight: bold;
+// }
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-track:hover {
+  background: #f7f7f7;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #888
+}
+.inner-scroll {
+  scrollbar-width: thin
+}
+
+tbody{
+  tr:hover{
+    background-color: #c5c5b4;
+  }
+  tr{
+    cursor: pointer;
+    border-bottom: solid 1px;
+  }
+}
+
+

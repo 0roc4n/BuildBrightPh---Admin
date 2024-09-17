@@ -1,0 +1,96 @@
+<ion-header>
+  <app-toolbar-menu title="For Pickup">
+  </app-toolbar-menu>
+
+</ion-header>
+<ion-content>
+  <ion-row>
+    <ion-col size="12" size-lg="6" *ngFor="let forPickup of (pickupOrders$ | async)">
+      <ion-card>
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <img [src]="forPickup.clientInfo.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h1 *ngIf="forPickup.clientInfo.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}} {{fullname.last}}
+            </h1>
+          </ion-label>
+        </ion-item>
+        <ion-card-content>
+          <h1>
+            Ordered Products
+          </h1>
+          <ng-container *ngFor="let item of forPickup?.products">
+           <ng-container *ngIf="item.productDetails; else deleted">
+            <ng-container *ngIf="item.variants; else noVariant">
+              <!-- <div *ngFor="let variant of item.variants" style="display: flex;justify-content: space-between;"> -->
+                <div>
+                  {{item.productDetails.name}}: <span *ngFor="let name of item.variants">{{name.variant}} </span> X {{item.quantity}}
+                </div>
+                <div>
+                  {{(item.bulk_price ?? item.price * item.quantity )| currency: "PHP"}}
+                </div>
+              <!-- </div> -->
+            </ng-container>
+            <ng-template #noVariant>
+              <div style="display: flex;justify-content: space-between;">
+                <div>
+                  {{item.productDetails.name}} X {{item.quantity}}
+                </div>
+                <div>
+                  {{( item.bulk_price ?? item.price * item.quantity) | currency: "PHP"}}
+                </div>
+              </div>
+            </ng-template>
+           </ng-container>
+           <ng-template #deleted>
+            <div>This product has been deleted</div>
+           </ng-template>
+          </ng-container>
+
+          <h1 style="padding-top: 20px;display: flex;justify-content: space-between;">
+            <div>
+              Total :
+            </div>
+            <div>
+              {{paymentData(forPickup) | currency:"PHP"}}
+            </div>
+        
+          </h1>
+          <ng-container *ngIf="forPickup.paypalData as payPalData; else cashPickup">
+            <h2>
+              Paid via paypal
+            </h2>
+            <ion-item style="padding-top: 10px;" lines="none">
+              <ion-icon slot="start" name="logo-paypal"></ion-icon>
+              <ion-label>
+                <h2>
+                  Transaction ID : {{payPalData.id}}
+                </h2>
+                <p *ngIf="payPalData.payer ?? payPalData.email as name">
+                  paid by : {{name}}
+                </p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+          <ng-template #cashPickup>
+            <ion-item lines="none">
+              <ion-icon slot="start" name="cash-outline"></ion-icon>
+              <ion-label>
+                <h2>
+                  Cash on Pickup
+                </h2>
+              </ion-label>
+            </ion-item>
+          </ng-template>
+        </ion-card-content>
+         
+        <ion-button (click)="getImageForPickup(forPickup)" expand="block">
+          Pickup
+        </ion-button>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

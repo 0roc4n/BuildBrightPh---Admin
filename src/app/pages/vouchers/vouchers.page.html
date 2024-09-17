@@ -1,0 +1,101 @@
+<ion-header>
+  <app-toolbar-menu title="Vouchers">
+  </app-toolbar-menu>
+</ion-header>
+
+<ion-content>
+
+  <ion-segment [value]="tab" (ionChange)="changeTab($event)">
+    <ion-segment-button [value]="0">
+      <ion-label>Valid</ion-label>
+    </ion-segment-button>
+    <ion-segment-button [value]="1">
+      <ion-label>Expired</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container *ngIf="tab === 0">
+    <h1 class="ion-no-margin ion-padding">
+      Valid
+    </h1>
+    <ion-row class="ion-padding">
+      <ion-col size="12" size-md="4"  *ngFor="let validVoucher of validVouchers$ | async ">
+        <ion-card class="ion-no-margin"  (click)="addVoucher(validVoucher)" button>
+          <h1 class="ion-no-margin ion-padding">
+            Code : {{validVoucher.voucherCode}}
+          </h1>
+          <ion-item lines="none">
+            <ion-label>
+              <ng-container *ngIf="validVoucher.voucherDiscountType === 'flat'">
+                Discount: - {{validVoucher.voucherDiscountValue | currency : "PHP"}}
+              </ng-container>
+              <ng-container *ngIf="validVoucher.voucherDiscountType === 'percentage'">
+                Discount: - {{validVoucher.voucherDiscountValue}} %
+              </ng-container>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Description: {{validVoucher.voucherDescription}}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Valid up to {{validVoucher.voucherExpiry | date}}
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+  <ng-container *ngIf="tab === 1">
+    <h1 class="ion-no-margin ion-padding">
+      Expired
+    </h1>
+    <ion-row class="ion-padding">
+      <ion-col size="12" size-md="4"  *ngFor="let expiredVoucher of expiredVouchers$ | async ">
+        <ion-card class="ion-no-margin">
+          <h1 class="ion-no-margin ion-padding">
+            Code : {{expiredVoucher.voucherCode}}
+          </h1>
+          <ion-item lines="none">
+            <ion-label>
+              <ng-container *ngIf="expiredVoucher.voucherDiscountType === 'flat'">
+                Discount: - {{expiredVoucher.voucherDiscountValue | currency : "PHP"}}
+              </ng-container>
+              <ng-container *ngIf="expiredVoucher.voucherDiscountType === 'percentage'">
+                Discount: - {{expiredVoucher.voucherDiscountValue}} %
+              </ng-container>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Description: {{expiredVoucher.voucherDescription}}
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              Expired on {{expiredVoucher.voucherExpiry | date}}
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+
+
+
+
+
+
+
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="addVoucher()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+</ion-content>

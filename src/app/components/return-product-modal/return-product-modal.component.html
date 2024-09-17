@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button  (click)="dismiss()" >
+        <ion-icon slot="start"name="chevron-back-outline"></ion-icon>
+        Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Return Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <h2 class="ion-no-margin ion-padding">
+      Client Details
+    </h2>
+    <ion-item *ngIf="orderDetails.clientDetails as clientDetails" lines="none">
+      <ion-avatar slot="start">
+        <img [src]="clientDetails.profilePic" />
+      </ion-avatar>
+      <ion-label>
+        <h2 *ngIf="clientDetails.fullname as fullname">
+          {{fullname.first}} {{fullname.middleInitial}}.{{fullname.last}}
+        </h2>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <ng-container *ngIf="returnProductDetails$ | async as returnProductDetails">
+    <ion-card>
+      <h2 class="ion-no-margin ion-padding">
+        Products with Issues
+      </h2>
+      <ng-container *ngFor="let product of returnProductDetails.products">
+        <ng-container *ngIf="product.productDetails;else deleted">
+          <ng-container *ngIf="product.variants as returnVariants; else noVariant">
+            <!-- <ng-container *ngFor="let returnVariant of returnVariants"> -->
+              <ion-item lines="none">
+                <ion-thumbnail slot="start">
+                  <!-- <img [src]="product.productDetails.variants[returnVariant.variantIndex].images[0].imageRef"/> -->
+                  <img [src]="product.image"/>
+                </ion-thumbnail>
+                <ion-label>
+                  <!-- {{product.productDetails.name}} {{product.productDetails.variants[returnVariant.variantIndex].variant_name}} -->
+                  {{product.name}}<span *ngFor="let variant of product.variants"> {{variant.variant}}</span>
+                </ion-label>
+              </ion-item>
+              <ion-row class="ion-padding">
+                <ion-col size="auto" *ngFor="let image of product.pictures">
+                  <ion-img [src]="image" class="returnImage"></ion-img>
+                </ion-col>
+              </ion-row>
+            <!-- </ng-container> -->
+           
+          </ng-container>
+          <ng-template #noVariant>
+            <ion-item lines="none">
+              <ion-thumbnail slot="start">
+                <!-- <img [src]="product.productDetails.images[0].imageRef"/> -->
+                <img [src]="product.image"/>
+              </ion-thumbnail>
+              <ion-label>
+                <!-- {{product.productDetails.name}} -->
+                {{product.name}}
+              </ion-label>
+            </ion-item>
+            <ion-row class="ion-padding">
+              <ion-col size="auto" *ngFor="let image of product.pictures">
+                <ion-img [src]="image" class="returnImage"></ion-img>
+              </ion-col>
+            </ion-row>
+          </ng-template>
+        </ng-container>
+        <ng-template #deleted>
+          <ion-item>
+            This product has been deleted
+          </ion-item>
+        </ng-template>
+      </ng-container>
+      <h2 class="ion-no-margin ion-padding">
+        Chat
+      </h2>
+      <div class="ion-padding">
+        <div style="max-height: 500px;overflow-y: scroll; ">
+          <div *ngFor="let message of returnProductDetails.chat">
+            <div [ngClass]="{'client-message': message.from === 'client' ,'store-message':message.from === 'store' }">
+              {{message.message}}
+              <p>
+              {{message.timestamp | date : "MMM d, y, h:mm a"}}
+              </p>
+            </div>
+          </div>
+        </div>
+       
+        <ion-item mode="md" fill="outline" style="padding-top: 20px;" *ngIf="returnProductDetails.status === status.Pending">
+          <ion-label position="floating">Send Message</ion-label>
+          <ion-input [formControl]="chatInput" (keyup.enter)="chatReturnProduct(returnProductDetails.chat)"></ion-input> <!--(keyup.enter)="sendQuotationMessage(quotationDetails.quotation.messages)"-->
+          <ion-icon name="send-outline" slot="end" style="cursor: pointer;" (click)="chatReturnProduct(returnProductDetails.chat)"></ion-icon> <!--(click)="sendQuotationMessage(quotationDetails.quotation.messages)"-->
+        </ion-item>
+      </div>
+    </ion-card>
+    <div class="ion-padding" *ngIf="returnProductDetails.status === status.Pending">
+      <ion-button (click)="resolve()" expand="block">
+        Resolve
+      </ion-button>
+    </div>
+  </ng-container>
+
+
+</ion-content>

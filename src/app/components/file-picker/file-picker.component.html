@@ -1,0 +1,16 @@
+
+<div style="display: flex; flex-direction: column;">
+  <ion-row formArrayName="images" style="display: flex; justify-content: center;" > <!--style="display: flex;justify-content: center; align-items: center;"-->
+    <ion-col size="6" *ngFor="let image of imageFormArray.controls;let i = index">
+      <div class="container">
+        <ion-img [src]="image.value.webPath ?? image.value.imageRef"></ion-img>
+        <ion-icon name="close" class="close-icon" (click)="deleteImage(i)"></ion-icon>
+      </div>
+
+    </ion-col>
+  </ion-row>
+  <ion-button (click)="pickImage()" fill="clear">
+    {{labelTag? labelTag:'Upload Image'}}
+  </ion-button>
+</div>
+

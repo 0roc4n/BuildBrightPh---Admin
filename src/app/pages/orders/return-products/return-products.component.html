@@ -1,0 +1,66 @@
+<ion-header>
+  <app-toolbar-menu title="Return Products">
+  </app-toolbar-menu>
+</ion-header>
+<ion-content>
+  <ion-row>
+    <ng-container  *ngFor="let returnProduct of (returnProduct$ | async )" >
+      <ion-col *ngIf="returnProduct.orderDetails  != null && getStatus(returnProduct.returnProductDetails.status) != 'ERROR' " size="12" size-lg="4">
+        <ion-card (click)="openModal(returnProduct.orderDetails)" button>
+          <h2 class="ion-no-margin ion-padding">
+            Status: {{getStatus(returnProduct.returnProductDetails.status) | titlecase}}
+          </h2>
+          <ion-item *ngIf="returnProduct.orderDetails.clientDetails as clientDetails" lines="none">
+            <ion-avatar slot="start">
+              <img [src]="clientDetails.profilePic" />
+            </ion-avatar>
+            <ion-label>
+              <h3 *ngIf="clientDetails.fullname as fullname">
+                {{fullname.first}} {{fullname.middleInitial}}. {{fullname.last}}
+              </h3>
+              <p>
+                Return requested at {{returnProduct.returnProductDetails.timestamp | date}}
+              </p>
+            </ion-label>
+          </ion-item>
+          <h2 class="ion-no-margin ion-padding">
+            Products 
+          </h2>
+          <ion-list style="height: 100px; overflow-y: scroll; ">
+            <ng-container *ngFor="let product of returnProduct.returnProductDetails.products">
+              <ng-container *ngIf="product.productDetails;else deletedProduct" >
+                <ng-container *ngIf="product.variants as returnVariants; else noVariants">
+                  <!-- <ion-item *ngFor="let returnVariant of returnVariants" lines="none"> -->
+                  <ion-item  lines="none">
+                    <ion-thumbnail slot="start">
+                      <!-- <img [src]="product.productDetails.variants[returnVariant.variantIndex].images[0].imageRef" /> -->
+                      <img [src]="product.image" />
+                    </ion-thumbnail>
+                    <!-- <ion-label>{{product.productDetails.name}} {{product.productDetails.variants[returnVariants[0].variantIndex].variant_name}}</ion-label> -->
+                    <ion-label>{{product.productDetails.name}}: <span *ngFor="let name of product.variants"> {{name.variant}}</span></ion-label>
+                  </ion-item>
+                </ng-container>
+                <ng-template #noVariants>
+                  <ion-item lines="none">
+                    <ion-thumbnail slot="start">
+                      <!-- <img [src]="product.productDetails.images[0].imageRef"/> -->
+                      <img [src]="product.image"/>
+                    </ion-thumbnail>
+                    <ion-label>{{product.productDetails.name}} </ion-label>
+                  </ion-item>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+            <ng-template #deletedProduct>
+                <ion-item>
+                  Thiis product has been deleted
+                </ion-item>
+            </ng-template>
+          </ion-list>
+        
+        </ion-card>
+      </ion-col>
+    </ng-container>
+   
+  </ion-row>
+</ion-content>

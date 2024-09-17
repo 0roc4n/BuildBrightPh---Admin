@@ -1,0 +1,20 @@
+<swiper #swiper [config]='swipeOpt'>
+  <!-- <ng-content select="selector"></ng-content> -->
+  <ng-template swiperSlide *ngFor="let cItem of carouselArray; let i = index">
+    <ion-card style="width:370px; height: 150px;">
+      <div style="display: flex; align-items: center;" class="ion-padding">
+        <ion-avatar>
+          <img [src]="" />
+        </ion-avatar>
+        {{cItem.timestamp | date : 'MMM d, y h:mm a'}}
+      </div>
+      <div class="ion-padding">
+        {{cItem.review}}
+      </div>
+      <div>
+        <app-rating [rating]="cItem.rating" [outOf]="5"></app-rating>
+      </div>
+
+    </ion-card>
+  </ng-template>
+</swiper>

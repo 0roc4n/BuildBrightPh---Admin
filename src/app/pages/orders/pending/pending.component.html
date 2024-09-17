@@ -1,0 +1,275 @@
+
+<ion-header>
+  <app-toolbar-menu title="Pending Orders">
+  </app-toolbar-menu>
+
+</ion-header>
+<ion-content [fullscreen]="true" scrollbar>
+
+  <ng-container [formGroup]="pendingForm">
+    <ng-container formArrayName="pendingFormArray">
+      <ion-card *ngFor="let pend of (pendingOrders$ | async); let i = index" >
+        <ion-card-header style="padding: 10px;">
+            <ion-card-title style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                Pending Order ~ for {{pend.deliveryMethod | titlecase}}
+              </div>
+              <h5>
+                {{pend.timestamp | date : 'MMM d, y h:mm a'}}
+              </h5>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content style="padding: 10px;">
+
+
+            <ion-item lines="none">
+              <ion-avatar slot="start">
+                <img [src]="pend.clientInfo.profilePic" />
+              </ion-avatar>
+              <ion-label>
+                <h4>
+                  From:
+                </h4>
+                <h1>
+                  {{pend.clientInfo.fullname.first}} {{pend.clientInfo.fullname.middleInitial}} {{pend.clientInfo.fullname.last}}
+                </h1>
+              </ion-label>
+            </ion-item>
+
+              <ion-item lines="none" class="client-item" ><!--style="padding: 10px 10px 0 20px;"-->
+                <ion-icon name="navigate-circle-outline" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>Address:</h3>
+                  <p>
+                   {{pend.address.completeAddress}}
+                  </p>
+                </ion-label>
+              </ion-item>
+
+              <ion-item lines="none" class="client-item" ><!--style="padding: 0 10px 0 20px;"-->
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>Phone:</h3>
+                  <p>
+                    {{pend.clientInfo.mobile_no}}
+                  </p>
+                </ion-label>
+              </ion-item>
+
+              <ion-item lines="none" class="client-item" ><!--style="padding: 0 10px 0 20px;"-->
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>Email:</h3>
+                  <p>
+                    {{pend.clientInfo?.email}}
+                  </p>
+                </ion-label>
+              </ion-item>
+
+              <ion-item lines="none" class="client-item" >
+                <ion-icon [name]="pend.deliveryMethod=== 'pickup'? 'hand-left-outline': 'car-outline'" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>For {{pend.deliveryMethod| titlecase}}</h3>
+                </ion-label>
+              </ion-item>
+
+              <ion-item *ngIf="pend.paypalData" lines="none" class="client-item" >
+                <ion-icon name="logo-paypal" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>Paid By: {{pend.paypalData.payer ?? pend.paypalData.email}}</h3>
+                </ion-label>
+              </ion-item>
+              <ion-item *ngIf="pend.paypalData" lines="none" class="client-item" >
+                <ion-icon name="receipt-outline" slot="start"></ion-icon>
+                <ion-label class="ion-no-margin">
+                  <h3>Transaction ID: {{pend.paypalData.transactionID}}</h3>
+                </ion-label>
+              </ion-item>
+
+              <div style="padding:10px">
+                <table style="width: 100%;">
+                  <tr>
+                    <th style="text-align: left; padding: 5px;">
+                      Product
+                    </th>
+                    <th style="text-align: left; padding: 5px;">
+                      Quantity
+                    </th>
+                    <th style="text-align: left; padding: 5px;">
+                      {{pend.quotation ? 'Bulk Price' : 'Total Price'}}
+                    </th>
+                    <th style="text-align: left; padding: 5px;">
+                      Stock
+                    </th>
+                  </tr>
+                  <ng-container *ngFor="let item of pend.products">
+                  <ng-container *ngIf="item.productDetails;else deletedProduct">
+                    <ng-container *ngIf="item.variants; else noVariant">
+                      <!-- <tr *ngFor="let variant of item.variants"> -->
+                      <tr>
+                        <td style="padding: 5px;">
+                          <!-- {{item.productDetails.name}} {{item.productDetails.variants[variant.variantIndex].variant_name}} -->
+                          {{item.productDetails.name}}: <span *ngFor="let variant of item.variants"> {{variant.variant}}</span>
+                        </td>
+                        <td style="padding: 5px;">
+                          <!-- {{variant.quantity}} -->
+                          {{item.quantity}}
+                        </td>
+                        <td style="padding: 5px;">
+                          <!-- {{(variant.bulk_price ?? item.productDetails.variants[variant.variantIndex].price * variant.quantity )| currency: "PHP"}} -->
+                          {{(item.bulk_price ?? item.price * item.quantity )| currency: "PHP"}}
+                        </td>
+                        <td style="padding: 5px;">
+                          <!-- {{item.productDetails.variants[variant.variantIndex].in_stock}} -->
+                          {{item.variants[0].details.in_stock}}
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noVariant>
+                      <tr>
+                        <td style="padding: 5px;">
+                          {{item.productDetails.name}}
+                        </td>
+                        <td style="padding: 5px;">
+                          {{item.quantity}}
+                        </td>
+                        <td style="padding: 5px;">
+                          {{( item.bulk_price ?? item.price * item.quantity) | currency: "PHP"}}
+                        </td>
+                        <td style="padding: 5px;">
+                          {{item.productDetails.in_stock}}
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #deletedProduct>
+                    <tr>
+                      <td colspan="4">
+                        This product has been deleted
+                      </td>
+                    </tr>
+                  </ng-template>
+                  </ng-container>
+                </table>
+              </div>
+
+              <ion-item lines="none" class="client-item" *ngIf="pend.message as specialInstructions">
+                <ion-label class="ion-no-margin">
+                  <h3>Special Instructions: </h3>
+                  <h2>
+                    {{specialInstructions}}
+                  </h2>
+                </ion-label>
+              </ion-item>
+
+              <ion-row style="padding-top: 50px;">
+                <ion-col size="6">
+                  <ion-item lines="none" class="client-item">
+                    <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                    <ion-label class="ion-no-margin">
+                      <h2>Order Due</h2>
+                      <h1>
+                        {{pend.deliveryDate | date : 'MMM d, y'}}
+                      </h1>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item  lines="none" class="client-item"  *ngIf="pend.deliveryMethod == 'delivery'">
+                    <ion-icon name="car-outline" slot="start"></ion-icon>
+                  <ion-label  class="ion-no-margin">
+                      <h3 style="margin-bottom: 5px;">
+                        Delivery Fee: {{pend.deliveryFee | currency: "PHP"}} 
+                      </h3>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item lines="none" class="client-item" *ngIf="pend.voucherInfo as voucherInfo">
+                    <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+                    <ion-label class="ion-no-margin">
+                      <h3>Voucher ({{voucherInfo.voucherCode}})</h3>
+                      <h2 *ngIf="voucherInfo.voucherDiscountType ==='flat'">
+                        - {{ voucherInfo.voucherDiscountValue | currency : "PHP"}}
+                      </h2>
+                      <h2 *ngIf="voucherInfo.voucherDiscountType ==='percentage'">
+                        - {{ voucherInfo.voucherDiscountValue}} %
+                      </h2>
+                    </ion-label>
+                  </ion-item>
+
+
+                  <ion-item lines="none" class="client-item">
+                    <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+                    <ion-label class="ion-no-margin">
+                      <h3>Item Amount</h3>
+                      <h2>
+                        {{ paymentData(pend)  | currency : "PHP"}}
+                      </h2>
+                    </ion-label>
+                  </ion-item >
+
+                  <ng-container *ngIf="pend.payPalData as payPalData">
+                    <ion-item lines="none">
+                      <ion-icon slot="start" name="logo-paypal"></ion-icon>
+                      <ion-label>
+                        <h4>
+                          Transaction ID: {{payPalData.id}}
+                        </h4>
+                        <p >
+                          Payed by: {{payPalData.payer.name.given_name}} {{payPalData.payer.name.surname}}
+                        </p>
+                      </ion-label>
+                    </ion-item>
+
+                  </ng-container>
+
+                </ion-col>
+                <ion-col size="6" [formGroupName]="i">
+                  <ion-list>
+                    <ion-item lines="none" *ngIf="pend.deliveryMethod === 'delivery'">
+                      <ion-label>
+                        Select Minimum Vehicle Type
+                      </ion-label>
+                      <ion-select interface="popover" placeholder="Vehicle Type"  formControlName="minVehicleType" ><!---->
+                        <ion-select-option *ngFor="let type of (dataQueries.vehicleTypes$ | async)">{{type}}</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item  lines="none" *ngIf="pend.deliveryFee === 'too_far'">
+                      <ion-label>Set Delivery Fee: </ion-label>
+                      <ion-input type="number" style="text-align: right;"  formControlName="setDeliveryFee"></ion-input>
+                    </ion-item>
+                  </ion-list>
+                </ion-col>
+              </ion-row>
+
+            <div style="display: flex; justify-content: flex-end; padding-top: 20px;">
+              <ion-button (click)="null" style="--background: red;" (click)="reject(pend.id,pend.clientId )">
+                Reject
+              </ion-button>
+              <ng-container *ngIf="pend.deliveryMethod === 'delivery' || pend.deliveryFee === 'too_far'; else justAccept">
+                <ng-container *ngIf="getFormFroup(i) as formGroup">
+                  <ion-button style="--background: green;" (click)="accept(pend, formGroup.value)" [disabled]="!(formGroup.valid)">
+                    Accept
+                  </ion-button>
+                </ng-container>
+              </ng-container>
+              <ng-template #justAccept>
+                <ion-button (click)="null" style="--background: green;" (click)="accept(pend)">
+                  Accept
+                </ion-button>
+              </ng-template>
+            </div>
+
+          </ion-card-content>
+
+      </ion-card>
+    </ng-container>
+  </ng-container>
+
+
+
+</ion-content>
+
+
+
+
+
+

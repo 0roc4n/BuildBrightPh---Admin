@@ -1,0 +1,7 @@
+{
+  "name": "ErrandMate",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,73 @@
+
+<ion-card *ngIf="withTable; else elseBlock">
+  <ion-card-header>
+    <ion-row>
+      <ion-col size="6">
+        {{chartTitle}}
+      </ion-col>
+      <ion-col size="6" class="ion-text-right">
+        <h3 style="margin: 0; font-weight: bolder; color: #172b4c;font-weight: 700;">
+          {{dataInfo}}
+        </h3>
+      </ion-col>
+    </ion-row>
+    <!--  -->
+  </ion-card-header>
+  <ion-card-content>
+      <apx-chart
+    [chart]="chartOptions.chart!"
+    [annotations]="chartOptions.annotations!"
+    [colors]="chartOptions.colors!"
+    [dataLabels]="chartOptions.dataLabels!"
+    [series]="chartOptions.series!"
+    [stroke]="chartOptions.stroke!"
+    [labels]="chartOptions.labels!"
+    [legend]="chartOptions.legend!"
+    [markers]="chartOptions.markers!"
+    [noData]="chartOptions.noData!"
+    [fill]="chartOptions.fill!"
+    [tooltip]="chartOptions.tooltip!"
+    [plotOptions]="chartOptions.plotOptions!"
+    [responsive]="chartOptions.responsive!"
+    [xaxis]="chartOptions.xaxis!"
+    [yaxis]="chartOptions.yaxis!"
+    [forecastDataPoints]="chartOptions.forecastDataPoints!"
+    [grid]="chartOptions.grid!"
+    [states]="chartOptions.states!"
+    [title]="chartOptions.title!"
+    [subtitle]="chartOptions.subtitle!"
+    [theme]="chartOptions.theme!"
+    [autoUpdateSeries]="chartOptions.autoUpdateSeries!"
+    ></apx-chart>
+
+  </ion-card-content>
+</ion-card>
+<ng-template #elseBlock>
+
+    <apx-chart
+  [chart]="chartOptions.chart!"
+  [annotations]="chartOptions.annotations!"
+  [colors]="chartOptions.colors!"
+  [dataLabels]="chartOptions.dataLabels!"
+  [series]="chartOptions.series!"
+  [stroke]="chartOptions.stroke!"
+  [labels]="chartOptions.labels!"
+  [legend]="chartOptions.legend!"
+  [markers]="chartOptions.markers!"
+  [noData]="chartOptions.noData!"
+  [fill]="chartOptions.fill!"
+  [tooltip]="chartOptions.tooltip!"
+  [plotOptions]="chartOptions.plotOptions!"
+  [responsive]="chartOptions.responsive!"
+  [xaxis]="chartOptions.xaxis!"
+  [yaxis]="chartOptions.yaxis!"
+  [forecastDataPoints]="chartOptions.forecastDataPoints!"
+  [grid]="chartOptions.grid!"
+  [states]="chartOptions.states!"
+  [title]="chartOptions.title!"
+  [subtitle]="chartOptions.subtitle!"
+  [theme]="chartOptions.theme!"
+  [autoUpdateSeries]="chartOptions.autoUpdateSeries!"
+  ></apx-chart>
+</ng-template>
+

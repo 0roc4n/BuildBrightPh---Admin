@@ -1,0 +1,59 @@
+<ion-header>
+  <app-toolbar-menu title="Point Redeem Request">
+  </app-toolbar-menu>
+</ion-header>
+<ion-content>
+
+  <ion-row>
+    <ion-col size="12" size-lg="4" *ngFor="let redeem of redeem$ | async">
+      <ion-card>
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <img [src]="redeem.riderData.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h1 *ngIf="redeem.riderData.fullname as fullname">
+              {{fullname.first}} {{fullname.middleInitial}} {{fullname.last}}
+            </h1>
+            <h2>
+              Current Points : {{redeem.riderData.points ?? 0}}
+            </h2>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-icon slot="start" name="trophy-outline"></ion-icon>
+          <ion-label>
+            <h1>
+              To Redeem: {{redeem.points}} points
+            </h1>
+            <h2 style="white-space: pre-wrap;">
+              <strong>Request:</strong> {{redeem.request}}
+            </h2>
+            <p>
+              Requested at {{redeem.requestedAt | date}}
+            </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-row>
+          <ion-col size="6">
+            <ion-button (click)="approve(redeem.id,redeem.riderId,redeem.riderData.points - redeem.points)" expand="block" [disabled]="redeem.riderData.points < redeem.points">
+              Approve
+            </ion-button>
+            <p style="text-align: center;" *ngIf="redeem.riderData.points < redeem.points">
+              Cannot approve. Not enough points.
+            </p>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button (click)="decline(redeem.id)" color="danger" expand="block">
+              Decline
+            </ion-button>
+
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+</ion-content>

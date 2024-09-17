@@ -1,0 +1,140 @@
+<ion-header>
+  <app-toolbar-menu title="Analysis">
+
+  </app-toolbar-menu>
+</ion-header>
+<ion-content scrollbar>
+  <ion-card>
+    <ion-card-header>
+      <ion-row>
+        <ion-col size="6">
+          Monthly Sales Overview
+        </ion-col>
+        <ion-col size="6" class="ion-text-right">
+          <h3 style="margin: 0; font-weight: bolder; color: #172b4c;font-weight: 700;">
+            <!-- {{dataInfo}} -->
+          </h3>
+        </ion-col>
+      </ion-row>
+      <apx-chart
+      [chart]="monthlySalesChart.chart!"
+      [annotations]="monthlySalesChart.annotations!"
+      [colors]="monthlySalesChart.colors!"
+      [dataLabels]="monthlySalesChart.dataLabels!"
+      [series]="(monthRevenue$ | async)!"
+      [stroke]="monthlySalesChart.stroke!"
+      [labels]="monthlySalesChart.labels!"
+      [legend]="monthlySalesChart.legend!"
+      [markers]="monthlySalesChart.markers!"
+      [noData]="monthlySalesChart.noData!"
+      [fill]="monthlySalesChart.fill!"
+      [tooltip]="monthlySalesChart.tooltip!"
+      [plotOptions]="monthlySalesChart.plotOptions!"
+      [responsive]="monthlySalesChart.responsive!"
+      [xaxis]="monthlySalesChart.xaxis!"
+      [yaxis]="monthlySalesChart.yaxis!"
+      [forecastDataPoints]="monthlySalesChart.forecastDataPoints!"
+      [grid]="monthlySalesChart.grid!"
+      [states]="monthlySalesChart.states!"
+      [title]="monthlySalesChart.title!"
+      [subtitle]="monthlySalesChart.subtitle!"
+      [theme]="monthlySalesChart.theme!"
+      [autoUpdateSeries]="monthlySalesChart.autoUpdateSeries!"
+      ></apx-chart>
+    </ion-card-header>
+    
+  </ion-card>
+
+
+  <!-- <app-chart chartTitle="Monthly Sales Overview" [chartOptions]="monthlySalesChart" [withTable]="true">
+  </app-chart> -->
+
+  <!-- <ion-card style="background:linear-gradient(1deg, #4c95dd, #77aee5); ">
+    <ion-grid fixed>
+
+      <ion-row>
+        <ion-col size="12" size-md="6" class="ion-padding" >
+          <ion-row>
+            <h4 style="color: #ffffff !important;">
+              Revenue Overview
+            </h4>
+          </ion-row>
+          <ion-row style="height: 150px">
+            <ion-col size="12" style="display: flex;">
+              <div class="icon-container revenue-overview">
+                <ion-icon name="trophy-outline"></ion-icon>
+              </div>
+              <div style="color: #ffffff !important;">
+                <h3 style="margin: 0; font-weight: bold;">
+                  {{ 0 | currency: 'PHP'}}
+                </h3>
+                <p style="color: rgba(255, 255, 255, 0.5) !important;  margin-top: 0;">
+                  Revenue
+                </p>
+                <h5>
+                  +0
+                </h5>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="12" size-md="6" class="ion-padding" >
+          <ion-row>
+            <h4 style="color: #ffffff !important;">
+              Sales Overview
+            </h4>
+          </ion-row>
+          <ion-row style="height: 150px">
+            <ion-col size="12" style="display: flex;">
+              <div class="icon-container revenue-overview">
+                <ion-icon name="trophy-outline"></ion-icon>
+              </div>
+              <div style="color: #ffffff !important;">
+                <h3 style="margin: 0; font-weight: bold;">
+                  {{ 0 | currency: 'PHP'}}
+                </h3>
+                <p style="color: rgba(255, 255, 255, 0.5) !important; margin-top: 0;">
+                  Sales
+                </p>
+                <h5>
+                  +0
+                </h5>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card> -->
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6"  size-xl="3" *ngFor="let card of analysisCards; let i = index">
+        <ion-card style="margin: 0;height:100%">
+          <div style="display: flex; justify-content: space-around; align-items: center;" class="ion-padding">
+            <div>
+              
+              <h2 style="margin: 0;font-weight: bold;" *ngIf="i<= 1; else noCurrenctPipe">
+                {{card.value | currency: 'PHP'}}
+              </h2>
+              <ng-template #noCurrenctPipe>
+                <h2 style="margin: 0;font-weight: bold;">
+                  {{card.value}}
+                </h2>
+              </ng-template>
+              {{card.title}}
+            </div>
+
+            <div class="icon-container  {{card.iconCssClass}}" >
+              <ion-icon [name]="card.iconName" [src]="card.iconSrc" size="large"></ion-icon>
+            </div>
+
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+</ion-content>

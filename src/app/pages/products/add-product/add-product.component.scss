@@ -1,0 +1,30 @@
+.addVariant{
+  margin: 0;
+  height: 100%;
+  min-height: 200px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.addVariant:hover {
+  background-color: rgb(122, 206, 239);
+}
+
+/* CSS for selected state */
+.selected-button {
+  width: 100px;
+  height: 40px;
+  --background: var(--ion-color-primary, #3880ff);
+  --color: var(--ion-color-primary-contrast, #fff);
+}
+
+.deselected-button {
+  width: 100px;
+  height: 40px;
+  --background: var(--ion-color-primary-contrast, #fff);
+  --color: var(--ion-color-primary, #3880ff);
+  border: 2px solid var(--ion-color-primary, #3880ff);
+  border-radius: 12px;
+}

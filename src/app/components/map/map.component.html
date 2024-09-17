@@ -1,0 +1,32 @@
+<google-map [height]="height!"
+            width="100%"
+            [center]="clientAddressPosition!"
+            [zoom]="zoom!"
+            [options]="mapOptions"
+            #mapRef="googleMap">
+
+          <!--Destination Marker-->
+
+          <map-marker
+            #destinationMarkerRef="mapMarker"
+            [icon]="googleMapPins.clientPin"
+            >
+          </map-marker>
+          <!--Rider Marker-->
+
+          <map-marker
+            #riderMarkerRef="mapMarker"
+            [icon]="googleMapPins.riderPin"
+          >
+          </map-marker>
+
+          <!--Store Marker-->
+
+          <map-marker
+           #storeMarkerRef="mapMarker"
+           [icon]="googleMapPins.storePin"
+          >
+          </map-marker>
+
+
+</google-map>

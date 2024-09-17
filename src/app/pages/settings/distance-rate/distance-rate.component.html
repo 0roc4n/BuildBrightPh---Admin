@@ -1,0 +1,56 @@
+<ion-header>
+  <app-toolbar-menu title="Distance Rate">
+  </app-toolbar-menu>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-list [formGroup]="distanceRateForm">
+    <ng-container formArrayName="distanceRateArray">
+      <ion-row>
+        <ion-col size="6">
+          <ion-list-header>
+            <ion-label>Distance (in meters)</ion-label>
+          </ion-list-header>
+        </ion-col>
+        <ion-col size="6">
+          <ion-list-header>
+            <ion-label>Price</ion-label>
+          </ion-list-header>
+        </ion-col>
+      </ion-row>
+      
+      <ion-row *ngFor="let rate of distanceRatArray.controls; let i = index">
+        <ng-container [formGroupName]="i">
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-col size="6">
+                <ion-input formControlName="distance" [readonly]="i !== toggleEditIndex"></ion-input>
+              </ion-col>
+              <ion-col size="6">
+                <ion-input formControlName="price" [readonly]="i !== toggleEditIndex"></ion-input>
+              </ion-col>
+
+              <ng-container *ngIf="toggleEditIndex === i; else notToggle">
+                <ion-icon name="checkmark-circle" slot="end" color="success" style="cursor: pointer;" (click)="saveRate(rate.value, i)"></ion-icon>
+                <ion-icon name="close-circle"     slot="end" color="danger"  style="cursor: pointer;" (click)="cancelEdit(i)" ></ion-icon>
+              </ng-container>
+              <ng-template #notToggle>
+                <ion-icon name="create" slot="end" color="primary" style="cursor: pointer;" (click)="toggleEdit(i)"></ion-icon>
+                <ion-icon name="trash" slot="end" color="danger" style="cursor: pointer;" (click)="deleteRate(rate.value.id)"></ion-icon>
+              </ng-template>
+            </ion-item>    
+          </ion-col>
+        </ng-container>
+      </ion-row>
+    </ng-container>
+  
+    <ion-button (click)="addRate()"  style="float: right;">
+      Add Rate
+    </ion-button>
+    
+  </ion-list>
+
+  
+</ion-content>

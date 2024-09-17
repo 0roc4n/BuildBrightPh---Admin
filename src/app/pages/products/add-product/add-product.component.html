@@ -1,0 +1,410 @@
+
+<ion-header>
+  <app-toolbar-menu title="">
+  </app-toolbar-menu>
+
+</ion-header>
+<ion-content [fullscreen]="true" scrollbar>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title (click)="checkFields()">{{frontTitles.title}}</ion-card-title>
+    </ion-card-header>
+    <form [formGroup]="addProductForm">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Product Name</ion-label>
+              <ion-input clearInput="true" formControlName="name"></ion-input>
+            </ion-item>
+          </ion-col>
+          <!-- <ion-col size="12" size-md="6">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Product Name</ion-label>
+              <ion-input clearInput="true" formControlName="name"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6"> -->
+            <!-- <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">In Stock</ion-label>
+              <ion-input  formControlName="in_stock" type="number" inputmode="numeric"></ion-input>
+            </ion-item> -->
+          <!-- </ion-col> -->
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item *ngIf="(categories$ | async) as categories" fill="outline" mode="md">
+              <ion-label position="stacked">Categories</ion-label>
+              <ion-select (ionChange)="updateSubcategories(categories)" placeholder="Make a Selection" formControlName="category" interface="popover" >
+                <ion-select-option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Subcategories</ion-label>
+              <ion-select placeholder="{{subcategories.length? 'Optional':'No subcategories'}}" formControlName="subcategory" interface="popover" >
+                <ion-select-option *ngFor="let sub of subcategories" [value]="sub.id">{{sub.name}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Item Code</ion-label>
+              <ion-input clearInput="true" formControlName="item_code"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item lines="none" style="display: contents;" class="variant">
+              <ion-label position="stacked">With Variants</ion-label>
+              <ion-toggle color="dark" [formControl]="withVariant" ></ion-toggle>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ng-container *ngIf="!withVariant.value">
+              <ion-row style="display: contents;">
+                <ion-item fill="outline" mode="md" style="padding-bottom: 10px;">
+                  <ion-label position="stacked" >Price</ion-label>
+                  <ion-input formControlName="price" type="number" inputmode="numeric"></ion-input>
+                </ion-item>
+              </ion-row>
+              <ion-row style="display: contents;">
+                <ion-item fill="outline" mode="md" >
+                  <ion-label position="stacked" >Stock</ion-label>
+                  <ion-input formControlName="in_stock" type="number" inputmode="numeric"></ion-input>
+                </ion-item>
+              </ion-row>
+            </ng-container>
+
+
+          </ion-col>
+        </ion-row>
+
+        <div *ngIf="withVariant.value" style="padding: 5px;">
+          <div  style="border-style: solid; border-radius: 5px; border-width: 1px;">
+            <ion-text style=" font-size: medium; font-weight: bold; padding: 10px;">Variations:</ion-text>
+            <ion-segment value="{{selectedSegment}}">
+              <ion-segment-button value="single" (click)="segmentChanged('single')">
+                <ion-label>Single Variation</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="multiple"(click)="segmentChanged('multiple')">
+                <ion-label>Multiple Variations</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+
+            <div *ngIf="selectedSegment === 'single'">
+              <!-- <ion-row style="display: flex; align-items: center;">
+                <ion-text style=" font-size: medium; font-weight: bold; padding: 10px;">Select Variation:</ion-text>
+                <ion-button [fill]="selected['size'] ? 'solid' : 'outline'" size="small" (click)="onVariationsChange('size')">
+                  Size
+                </ion-button>
+                <ion-button [fill]="selected['color'] ? 'solid' : 'outline'" size="small" (click)="onVariationsChange('color')">
+                  Color
+                </ion-button>
+              </ion-row> -->
+              <ion-row>
+                <!-- <ion-col size="6"> -->
+                  <ion-item [formGroup]="addProductForm">
+                    <ion-label position="stacked">Variant Label</ion-label>
+                    <ion-input formControlName="variant_type"  #variantLabel  type="string" required></ion-input>
+                  </ion-item>
+                <!-- </ion-col> -->
+              </ion-row>
+              <ion-row *ngFor=" let v of variations; let i = index; "  formGroupName="variants" style="padding-top: 0; display: flex; border-bottom: solid 2px darkgray;">
+                <ng-container *ngIf="v === 'size'">
+                  <ion-col size="12" size-md="3" *ngFor="let size of getVariantArray('size')?.controls; let i=index" formArrayName="size" class="ion-padding" style="padding:0;">
+                    <ion-row [formGroup]="variantFromGroup(i, 'size')">
+                      <ion-card style="width: 100%;">
+                        <ion-col size="12">
+                          <ion-item lines="none" style="max-width: 100%; padding: 0%;">
+                            <ion-text  (click)="checkFields()" style="font-size: large; font-weight: bolder;">{{variantLabel.value}}</ion-text>
+                            <ion-icon name="ellipsis-vertical" slot="end" [id]="'popover_' + i"></ion-icon>
+                              <ion-popover [trigger]="'popover_' + i" [dismissOnSelect]="true">
+                              <ng-template>
+                                <ion-content>
+                                  <ion-list style="display: flex; flex-direction: column; align-items: center;">
+                                    <ion-item (click)="addVariant('size')">Add</ion-item>
+                                    <ion-item (click)="deleteVariant(i, 'size')">Delete</ion-item>
+                                  </ion-list>
+                                </ion-content>
+                              </ng-template>
+                            </ion-popover>
+                          </ion-item>
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Variant Name</ion-label>
+                            <ion-input  clearInput="true" formControlName="variant_name"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <ion-col size="12">
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Price</ion-label>
+                            <ion-input  formControlName="price" type="number" inputmode="numeric"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <ion-col size="12">
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Stock</ion-label>
+                            <ion-input formControlName="in_stock" type="number" inputmode="numeric"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <div *ngIf="!imageValid(variantFromGroup(i, 'size'))" style="width: -webkit-fill-available; display: flex; justify-content: center; padding-top: 10px; color: var(--ion-color-secondary);font-weight: 600; ">
+                          1 image is required
+                        </div>
+                        <app-file-picker fcName="images" style="width: -webkit-fill-available;">
+                        </app-file-picker>
+                      </ion-card>
+                    </ion-row>
+                  </ion-col>
+                </ng-container>
+                <!-- ================================COLOR================================== -->
+                <ng-container *ngIf="v=='color'">
+                  <ion-col size="12" size-md="3" *ngFor="let size of getVariantArray('color')?.controls; let i=index" formArrayName="color" class="ion-padding" style="padding:0;">
+                    <ion-row [formGroup]="variantFromGroup(i, 'color')">
+                      <ion-card style="width: 100%;">
+                        <ion-col size="12">
+                          <ion-item lines="none" style="max-width: 100%; padding: 0%;">
+                            <ion-text style="font-size: large; font-weight: bolder;">Color</ion-text>
+                            <ion-icon name="ellipsis-vertical" slot="end" [id]="'pop_' + i"></ion-icon>
+                              <ion-popover [trigger]="'pop_' + i" [dismissOnSelect]="true">
+                              <ng-template>
+                                <ion-content>
+                                  <ion-list style="display: flex; flex-direction: column; align-items: center;">
+                                    <ion-item (click)="addVariant('color')">Add</ion-item>
+                                    <ion-item (click)="deleteVariant(i, 'color')">Delete</ion-item>
+                                  </ion-list>
+                                </ion-content>
+                              </ng-template>
+                            </ion-popover>
+                          </ion-item>
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Variant Name</ion-label>
+                            <ion-input  clearInput="true" formControlName="variant_name"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <ion-col size="12">
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Price</ion-label>
+                            <ion-input  formControlName="price" type="number" inputmode="numeric"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <ion-col size="12">
+                          <ion-item fill="outline" mode="md">
+                            <ion-label position="stacked">Stock</ion-label>
+                            <ion-input formControlName="in_stock" type="number" inputmode="numeric"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <div *ngIf="!imageValid(variantFromGroup(i, 'color'))"  style="width: -webkit-fill-available; display: flex; justify-content: center; padding-top: 10px; color: var(--ion-color-secondary);font-weight: 600; ">
+                          1 image is required
+                        </div>
+                        <app-file-picker fcName="images" style="width: -webkit-fill-available;">
+                        </app-file-picker>
+                      </ion-card>
+                    </ion-row>
+                  </ion-col>
+                </ng-container>
+            </ion-row>
+            </div>
+
+            <div *ngIf="selectedSegment === 'multiple'">
+
+              <!-- Size========================================================================= -->
+              <ion-card>
+                <!-- <ion-row>
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label position="stacked">Size</ion-label>
+                      <ion-input #sizeInput type="string" required></ion-input>
+                    </ion-item>
+                  </ion-col>
+                  
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label position="stacked">Price</ion-label>
+                      <ion-input #priceInput type="number" required></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row> -->
+
+                <ion-row [formGroup]="addProductForm">
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label position="stacked">Parent Variant</ion-label>
+                      <ion-input formControlName="variant_type"  #parentVariant  type="string" required></ion-input>
+                    </ion-item>
+                  </ion-col>
+                  
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label position="stacked">Sub Variant</ion-label>
+                      <ion-input formControlName="subvariant_type"  #subVariant type="string" required></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              
+                <!-- <ion-button expand="full" (click)="addSizePrice(sizeInput, priceInput)">Add Types</ion-button> -->
+                <ion-button expand="full" (click)="addTypeVariant('colors')">Add Parent-variant</ion-button>
+                <ion-button expand="full" (click)="addSubVariant()">Add Sub-Variant</ion-button>
+              
+                <!-- <ion-card>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="5">
+                        <ion-label>Size</ion-label>
+                      </ion-col>
+                      <ion-col size="5">
+                        <ion-label>Price</ion-label>
+                      </ion-col>
+                    </ion-row>
+              
+                    <ion-row *ngFor="let entry of sizePriceEntries let i = index" style="align-items: center;">
+                      <ion-col size="5">
+                        <ion-input [value]="entry.name" [readonly]="!entry.editing" (ionChange)="updateFormValue($event, 'name', i)"></ion-input>
+                      </ion-col>
+                      <ion-col size="3">
+                        <ion-input [value]="entry.price" [readonly]="!entry.editing" (ionChange)="updateFormValue($event, 'price', i)"></ion-input>
+                      </ion-col>
+
+                      <ion-col size="2">
+                        <ion-button fill="none" (click)="entry.editing = !entry.editing">{{entry.editing? 'Save' : 'Edit'}}</ion-button>
+                      </ion-col>
+                      <ion-col size="2">
+                        <ion-button fill="none" (click)="deleteSizePrice(i)">Delete</ion-button>
+                      </ion-col>
+
+                    </ion-row>
+              
+                  </ion-grid>
+                </ion-card> -->
+              </ion-card>
+
+              <!-- Color ====================================================== -->
+              <ng-container *ngIf="getVariantArray('colors')?.controls?.length">
+                <ion-row formGroupName="variants" style="padding-top: 0; display: flex; border-bottom: solid 2px darkgray;">
+                  <ion-col size-md="4" *ngFor="let size of getVariantArray('colors')?.controls; let i=index" formArrayName="colors" >
+                    <ion-row [formGroup]="variantFromGroup(i, 'colors')">
+                      <ion-card style="width: 100%;">
+                        <ion-col size="12">
+                          <ion-item lines="none" style="max-width: 100%; padding: 0%;">
+                            <ion-text (click)="checkFields()"  style="font-size: large; font-weight: bolder;">{{parentVariant.value}}</ion-text>
+                            <ion-icon  *ngIf="itemVariants > 1"  name="ellipsis-vertical" slot="end" [id]="'pop_' + i"></ion-icon>
+                              <ion-popover  *ngIf="itemVariants > 1" [trigger]="'pop_' + i" [dismissOnSelect]="true">
+                              <ng-template>
+                                <ion-content>
+                                  <ion-list style="display: flex; flex-direction: column; align-items: center;">
+                                    <!-- <ion-item (click)="addTypeVariant('colors')">Add</ion-item> -->
+                                    <ion-item (click)="deleteVariant(i, 'colors')">Delete</ion-item>
+                                  </ion-list>
+                                </ion-content>
+                              </ng-template>
+                            </ion-popover>
+                          </ion-item>
+                          <!-- variant name ======================= -->
+                          <ion-item mode="md">
+                            <ion-label position="floating">Variant Name</ion-label>
+                            <ion-input  clearInput="true" formControlName="variant_name"></ion-input>
+                          </ion-item>
+                        </ion-col>
+                        <!-- types ======================= -->
+                        <ion-row>
+                          <ion-item lines="none">
+                            <ion-label >{{subVariant.value}}:</ion-label>
+                          </ion-item>
+                          <ion-row *ngFor="let types of getTypesArray(i)?.controls; let j = index" formArrayName="types">
+              
+                            <ion-col size="12" [formGroup]="getTypesControls(j, i)">
+                              <ion-card>
+                                <ion-badge *ngIf="typesSync.length>1" color="secondary" style="cursor: pointer;" (click)="deleteType(j)" >Delete</ion-badge>
+                                <ion-item mode="md">
+                                  <ion-label position="stacked">Name</ion-label>
+                                  <ion-input [value]="typesSync[j].name" clearInput="true" formControlName="name" (ionChange)="syncKey($event,typesSync[j])"></ion-input>
+                                </ion-item>
+                                <ion-item mode="md">
+                                  <ion-label position="stacked">Price</ion-label>
+                                  <ion-input clearInput="true" type="number" formControlName="price"></ion-input>
+                                </ion-item>
+                                <ion-item mode="md">
+                                  <ion-label position="stacked">Stocks</ion-label>
+                                  <ion-input clearInput="true" type="number" formControlName="in_stock"></ion-input>
+                                </ion-item>
+                              </ion-card>
+                            </ion-col>
+                          </ion-row>
+                        </ion-row>
+                        <!-- images ======================= -->
+                        <div  *ngIf="!imageValid(variantFromGroup(i, 'colors'))" style="width: -webkit-fill-available; display: flex; justify-content: center; padding-top: 10px; color: var(--ion-color-secondary);font-weight: 600; ">
+                          1 image is required
+                        </div>
+                        <app-file-picker fcName="images" style="width: -webkit-fill-available;">
+                        </app-file-picker>
+                      </ion-card>
+                    </ion-row>
+                    </ion-col>
+                </ion-row>
+              </ng-container>
+            </div>
+
+          </div>
+        </div>
+
+        <ion-row style="padding-top: 30px ;">
+          <ion-col size="12">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Product Description</ion-label>
+              <ion-textarea placeholder="Type something here" formControlName="description" autoGrow="true"></ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row >
+          <ion-col size="12" size-md="6">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Discount (%)</ion-label>
+              <ion-input formControlName="discount" type="number" inputmode="numeric"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-item fill="outline" mode="md">
+              <ion-label position="stacked">Meta Keyword</ion-label>
+              <ion-input  clearInput="true" formControlName="metaKeyword"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <div style="padding: 5px;" *ngIf="!withVariant.value">
+          <ion-row style="display: flex; flex-direction: column; border: solid 1px; border-radius: 5px; align-content: center; align-items: center;">
+            <h1>
+              Product Image
+            </h1>
+            <!-- <ion-img *ngIf="addProductForm.get('images')?.value" [src]="addProductForm.get('images')?.value.webPath ?? 'data:images/png;base64,' +addProductForm.get('images')?.value " style="display: block; min-width: 150px; max-width: 150px; height: auto;"></ion-img> -->
+            <div style="width: -webkit-fill-available; display: flex; justify-content: center; padding-top: 10px; color: var(--ion-color-secondary);font-weight: 600; ">
+              <!-- *ngIf="!imageValid()" -->
+              3 images are required
+            </div>
+            <app-file-picker fcName="images">
+            </app-file-picker>
+          </ion-row>
+        </div>
+
+
+        <ion-row >
+          <ion-col size="12" style="display: flex; justify-content: center;">
+            <ion-button (click)="submit()" [disabled]="!addProductForm.valid" style="width: 30%;">
+              {{frontTitles.buttonTitle}}
+              <!-- [disabled]="!addProductForm.valid" -->
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </form>
+  </ion-card>
+
+</ion-content>
+
+
+

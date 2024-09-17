@@ -1,0 +1,45 @@
+<ion-header>
+  <app-toolbar-menu title="Point Assignment">
+  </app-toolbar-menu>
+
+</ion-header>
+<ion-content>
+  <ion-row>
+    <ion-col size="12" size-lg="6" *ngFor="let rider of (riders$ | async)">
+      <ion-card>
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <img [src]="rider.profilePic" />
+          </ion-avatar>
+          <ion-label>
+            <h1>
+              {{rider.fullname.first}} {{rider.fullname.middleInitial}}. {{rider.fullname.last}}
+            </h1>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-icon slot="start" name="trophy-outline"></ion-icon>
+          <ion-label>
+            <h2>
+              {{ rider.points ?? 0}} points
+            </h2>
+          </ion-label>
+        </ion-item>
+        
+        <ion-row>
+          <ion-col size="6">
+            <ion-button (click)="pointsOperation(rider,true)" expand="block">
+              Add Points
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button (click)="pointsOperation(rider,false)" expand="block" color="secondary">
+              Deduct Points
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

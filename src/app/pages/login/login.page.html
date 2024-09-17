@@ -1,0 +1,55 @@
+<ion-content fullscreen="false" color="primary">
+
+  <ion-grid class="center-grid">
+
+    <ion-row>
+      <ion-col size="12">
+        <div style="display: flex; justify-content: center;">
+          <ion-img src="assets/icon/hardware_hq.svg" style="width: 75px;"></ion-img>
+        </div>
+
+
+        <ion-card class="ion-padding" [formGroup]="loginForm"  color="secondary">
+          <ion-card-header style="padding: 0">
+            <ion-card-title>Let's Get Started</ion-card-title>
+            <ion-card-subtitle>Sign In to continue to Hardware Headquarters</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-item fill="outline" mode="md" style="padding-top: 10px;">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+            <ion-note slot="error">Invalid email</ion-note>
+          </ion-item>
+
+          <ion-item fill="outline" mode="md" style="padding-top: 10px;">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input [type]="passwordInput.type" formControlName="password"></ion-input>
+            <ion-icon slot="end" [name]="passwordInput.icon" (click)="clickPasswordType()"></ion-icon>
+            <ion-note slot="error">Must contain characters</ion-note>
+          </ion-item>
+
+          <div style="display: flex; justify-content: center; align-items: center; padding-top: 30px; cursor: pointer;" (click)="resetPassword()">
+            <ion-icon name="lock-closed"></ion-icon>
+            Forgot Pwd?
+          </div>
+          <div style="display: flex; justify-content: center;">
+            <ion-button (click)="signIn()" [disabled]="disable$ | async">
+              Sign In
+            </ion-button>
+          </div>
+          <div style="display: flex; justify-content: center;padding-top: 15px;">
+            Don't have an account?
+            <div style="padding-left: 10px; cursor: pointer;color: black;" (click)="gotoRegistration()">
+              Sign Up
+            </div>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+
+
+</ion-content>

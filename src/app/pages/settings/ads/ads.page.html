@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      Advertisement Control
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <input type="file" (change)="handleFileInput($event)" accept=".png, .jpg, .jpeg" class="file-input" multiple   placeholder="Select file(s)"/>
+    <div *ngIf="selectedFiles.length > 0">
+      <p>Selected Files:</p>
+      <ul>
+        <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+      </ul>
+    </div>
+    <ion-button expand="full" fill="solid" color="secondary" class="upload-button" (click)="uploadPhotos()">
+      Upload Photos
+    </ion-button>
+  </div>
+
+  <ion-text style="font-size: large; font-weight: bold; margin-top: 10px;">Active Advertisement:</ion-text>
+  <div class="cards-container">
+    <ion-card *ngFor="let photo of photoUrls" class="custom-card" (click)="showDeleteConfirm(photo)">
+      <ion-card-content class="custom-card-content">
+        <ion-img  [src]="photo" alt="Uploaded Photo"></ion-img>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

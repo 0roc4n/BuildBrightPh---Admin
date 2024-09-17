@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.close-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 20px;
+  color: white;
+  background-color: rgba(255, 2, 2, 0.748);
+  border-radius: 50%;
+  cursor: pointer;
+}

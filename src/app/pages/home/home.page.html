@@ -1,0 +1,121 @@
+
+  <ion-header>
+    <app-toolbar-menu title="Dashboard">
+    </app-toolbar-menu>
+  </ion-header>
+  <ion-content [fullscreen]="true" scrollbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6"  size-xl="3" *ngFor="let item of totalsArray; let i = index">
+          <ion-card style="margin: 0;height:100%">
+            <ion-row>
+              <ion-col size="6" style="display: flex; justify-content: center;" >
+                <img [src]="item.imageSrc" style="max-width:80px;max-width:80;">
+              </ion-col>
+              <ion-col size="6">
+                  <ion-row>
+                    <ng-container *ngIf="item.value | async as value">
+                      <h2 *ngIf="i===3 ; else notRev">
+                        {{value | currency: "PHP"}}
+                      </h2>
+                      <ng-template #notRev>
+                        <h2>
+                          {{value}}
+                        </h2>
+                      </ng-template>
+                    </ng-container>
+                    
+                  </ion-row>
+                  <ion-row>
+                    {{item.title}}
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    
+
+    <ion-card>
+      <ion-card-header>
+        <ion-row>
+          <ion-col size="6">
+            Daily Revenue
+          </ion-col>
+          <ion-col size="6" class="ion-text-right">
+            <h3 style="margin: 0; font-weight: bolder; color: #172b4c;font-weight: 700;">
+              Total:{{ weekRevenue | currency: 'PHP'}}
+            </h3>
+          </ion-col>
+        </ion-row>
+      </ion-card-header>
+      <apx-chart
+        [chart]="dailyRevenueChart.chart!"
+        [annotations]="dailyRevenueChart.annotations!"
+        [colors]="dailyRevenueChart.colors!"
+        [dataLabels]="dailyRevenueChart.dataLabels!"
+        [series]="(weekRevenueSeries | async)!"
+        [stroke]="dailyRevenueChart.stroke!"
+        [labels]="dailyRevenueChart.labels!"
+        [legend]="dailyRevenueChart.legend!"
+        [markers]="dailyRevenueChart.markers!"
+        [noData]="dailyRevenueChart.noData!"
+        [fill]="dailyRevenueChart.fill!"
+        [tooltip]="dailyRevenueChart.tooltip!"
+        [plotOptions]="dailyRevenueChart.plotOptions!"
+        [responsive]="dailyRevenueChart.responsive!"
+        [xaxis]="dailyRevenueChart.xaxis!"
+        [yaxis]="dailyRevenueChart.yaxis!"
+        [forecastDataPoints]="dailyRevenueChart.forecastDataPoints!"
+        [grid]="dailyRevenueChart.grid!"
+        [states]="dailyRevenueChart.states!"
+        [title]="dailyRevenueChart.title!"
+        [subtitle]="dailyRevenueChart.subtitle!"
+        [theme]="dailyRevenueChart.theme!"
+        [autoUpdateSeries]="dailyRevenueChart.autoUpdateSeries!"
+      ></apx-chart>
+    </ion-card>
+  
+
+    <!-- <app-chart [chartOptions]="dailyRevenueChart" chartTitle="Daily Revenue" dataInfo="Total:{{ weekRevenue | currency: 'PHP'}}" [withTable]="true" >
+    </app-chart> -->
+
+    <!-- <ion-item>
+      <ion-label>Customer Review ({{numReviews}})</ion-label>
+    </ion-item>
+
+    <app-carousel [carouselArray]="carouselArray$ | async">
+    </app-carousel> -->
+    <!-- <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item>
+    <ion-item style="height:100px;">
+      <ion-label>Awesome Label</ion-label>
+    </ion-item> -->
+
+    <!-- <ion-img src="http://localhost:5984/images/test3/chicken.jpg"></ion-img> -->
+
+  </ion-content>

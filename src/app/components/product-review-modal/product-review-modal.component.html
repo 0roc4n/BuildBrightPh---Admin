@@ -1,0 +1,146 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()" fill="clear">
+        Dismiss
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Review Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <h1 class="ion-padding">
+    {{productReviewDetails.productDetails.name}}
+  </h1>
+
+  <ng-container *ngIf="productReviewDetails.productDetails.variants; else noVariant">
+    <ng-container *ngIf="productReviewDetails.productDetails.variants.colors ?? productReviewDetails.productDetails.variants.color ?? productReviewDetails.productDetails.variants.size ?? productReviewDetails.productDetails.variants  as variants">
+      <ng-container *ngIf="productReviewDetails.productDetails.variants.colors; else singleVariant" >
+        <ng-container  *ngFor="let variant of variants; let varIndex = index" >
+          <ion-accordion-group *ngFor="let type of variant.types; let varIndexJ = index" class="ion-padding">
+            <ion-accordion>
+              <ion-item slot="header">
+                <ion-thumbnail>
+                  <img [src]="variant.image[0].imageRef" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h1>
+                    {{variant.variant_name}} {{type.name}}
+                  </h1>
+                  <p>
+                    Average Rating 
+                    <app-rating [rating]="type.totalRating ?? 0" [outOf]="5">
+                    </app-rating>
+                  </p>
+                </ion-label>
+              </ion-item>
+              <ng-container *ngFor="let review of productReviewDetails.reviews">
+                <ion-item slot="content" *ngIf="review.variantIndex === varIndex && (review.type != null?  review.type == varIndexJ : true )">
+                  <ion-avatar slot="start">
+                    <img [src]="review.clientDetails.profilePic" />
+                  </ion-avatar>
+                  <ion-label>
+                    <h1>
+                      {{review.review}}
+                    </h1>
+                    <app-rating [rating]="review.rating ?? 0" [outOf]="5" >
+                    </app-rating>
+                    <h4>
+                      From : {{review.clientDetails.fullname.first}} {{review.clientDetails.fullname.middleInitial}} {{review.clientDetails.fullname.last}}
+                    </h4>
+                    <p>
+                      {{review.timestamp | date}}
+                    </p>
+                  </ion-label>
+                  <ion-button (click)="deleteReview(review)" slot="end" fill="clear">
+                    <ion-icon name="trash-outline" ></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ng-container>
+            </ion-accordion>
+          </ion-accordion-group>
+        
+        </ng-container>
+        
+      </ng-container>
+      <ng-template #singleVariant>
+        <ion-accordion-group *ngFor="let variant of variants; let varIndex = index" class="ion-padding">
+          <ion-accordion>
+            <ion-item slot="header">
+              <ion-thumbnail>
+                <img [src]="variant.image[0].imageRef" />
+              </ion-thumbnail>
+              <ion-label>
+                <h1>
+                  {{variant.variant_name}}
+                </h1>
+                <p>
+                  Average Rating 
+                  <app-rating [rating]="variant.totalRating ?? 0" [outOf]="5">
+                  </app-rating>
+                </p>
+              </ion-label>
+            </ion-item>
+            <ng-container *ngFor="let review of productReviewDetails.reviews">
+              <ion-item slot="content" *ngIf="review.variantIndex === varIndex">
+                <ion-avatar slot="start">
+                  <img [src]="review.clientDetails.profilePic" />
+                </ion-avatar>
+                <ion-label>
+                  <h1>
+                    {{review.review}}
+                  </h1>
+                  <app-rating [rating]="review.rating ?? 0" [outOf]="5" >
+                  </app-rating>
+                  <h4>
+                    From : {{review.clientDetails.fullname.first}} {{review.clientDetails.fullname.middleInitial}} {{review.clientDetails.fullname.last}}
+                  </h4>
+                  <p>
+                    {{review.timestamp | date}}
+                  </p>
+                </ion-label>
+                <ion-button (click)="deleteReview(review)" slot="end" fill="clear">
+                  <ion-icon name="trash-outline" ></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ng-container>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #noVariant>
+    <ion-list>
+      <ion-list-header>
+        <ion-label>
+         Average Rating 
+         <app-rating [rating]="productReviewDetails.productDetails.totalRating ?? 0" [outOf]="5" >
+         </app-rating>
+        </ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let review of productReviewDetails.reviews">
+        <ion-avatar slot="start">
+          <img [src]="review.clientDetails.profilePic" />
+        </ion-avatar>
+        <ion-label>
+          <h1 >
+            {{review.review}}
+          </h1>
+          <app-rating [rating]="review.rating ?? 0" [outOf]="5" >
+          </app-rating>
+          <h4>
+            From : {{review.clientDetails.fullname.first}} {{review.clientDetails.fullname.middleInitial}} {{review.clientDetails.fullname.last}}
+          </h4>
+          <p>
+            {{review.timestamp | date}}
+          </p>
+        </ion-label>
+        <ion-button (click)="deleteReview(review)" slot="end" fill="clear">
+          <ion-icon name="trash-outline" ></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+  
+  </ng-template>
+</ion-content>

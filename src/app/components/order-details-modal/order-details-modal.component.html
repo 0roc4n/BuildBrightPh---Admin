@@ -1,0 +1,259 @@
+<ion-content scrollbar>
+  <ion-header>
+    <ion-button (click)="dismissModal()" fill="clear">
+      Dismiss
+    </ion-button>
+  </ion-header>
+
+
+  <ion-card>
+    <ion-card-header>
+      <ion-item>
+        <ion-avatar slot="start">
+          <ion-img [src]="orderData.clientInfo.profilePic === '' ? 'assets/icon/no-avatar.svg' : orderData.clientInfo.profilePic "></ion-img>
+          <!-- <img [src]="orderData.clientDetails.avatar" /> -->
+        </ion-avatar>
+        <ion-label color="primary">
+          {{orderData.clientInfo.fullname.first}} {{orderData.clientInfo.fullname.middleInitial}} {{orderData.clientInfo.fullname.last}}
+        </ion-label>
+      </ion-item>
+
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item button lines="none">
+        <ion-icon name="call-outline"  slot="start"></ion-icon>
+        <ion-label>{{orderData.clientInfo.mobile_no}}</ion-label>
+      </ion-item>
+      <ion-item button lines="none" *ngIf="orderData.paymentMethod ==='delivery'">
+        <ion-icon name="location-outline"  slot="start"></ion-icon>
+        <ion-label>{{orderDetails?.address.completeAddress}}</ion-label>
+      </ion-item>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Orders</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div style="padding:10px">
+        <table style="width: 100%;">
+          <tr>
+            <th style="text-align: left; padding: 5px;">
+              Product
+            </th>
+            <th style="text-align: left; padding: 5px;">
+              Quantity
+            </th>
+            <th style="text-align: left; padding: 5px;">
+              {{orderDetails?.quotation ? 'Bulk Price' : 'Total Price'}}
+            </th>
+            <th style="text-align: left; padding: 5px;">
+              Stock
+            </th>
+          </tr>
+          <ng-container *ngFor="let item of orderData?.products">
+            <ng-container *ngIf="item.variants; else noVariant">
+              <tr>
+                <td style="padding: 5px;">
+                  {{item.productDetails.name}} <span *ngFor="let variant of item.variants"> {{variant.variant}}</span>
+                </td>
+                <td style="padding: 5px;">
+                  {{item.quantity}}
+                </td>
+                <td style="padding: 5px;">
+                  {{(item.bulk_price ?? item.price * item.quantity )| currency: "PHP"}}
+                </td>
+                <td style="padding: 5px;">
+                  {{item.variants[0].details.in_stock}}
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noVariant>
+              <tr>
+                <td style="padding: 5px;">
+                  {{item.productDetails.name}}
+                </td>
+                <td style="padding: 5px;">
+                  {{item.quantity}}
+                </td>
+                <td style="padding: 5px;">
+                  {{( item.bulk_price ?? item.price * item.quantity) | currency: "PHP"}}
+                </td>
+                <td style="padding: 5px;">
+                  {{item.productDetails.in_stock}}
+                </td>
+              </tr>
+            </ng-template>
+          </ng-container>
+        </table>
+      </div>
+      <!-- <ion-grid>
+        <ion-row>
+          <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+            Product
+          </ion-col>
+          <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+            Variant
+          </ion-col>
+          <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+            Quantity
+          </ion-col>
+          <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+            Total Price
+          </ion-col>
+          <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+            Stock
+          </ion-col>
+        </ion-row>
+        <ng-container *ngFor="let item of orderDetails?.items">
+          <ng-container *ngIf="item.variants; else noVariant">
+            <ion-row *ngFor="let variant of item.variants">
+
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.name}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.variants[variant.variantIndex].variant_name}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{variant.quantity}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.variants[variant.variantIndex].price * variant.quantity | currency: "PHP"}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.variants[variant.variantIndex].in_stock}}
+              </ion-col>
+            </ion-row>
+
+          </ng-container>
+          <ng-template #noVariant>
+            <ion-row>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.name}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                N/A
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.quantity}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.price * item.quantity | currency: "PHP"}}
+              </ion-col>
+              <ion-col size="2.4" style="display: flex; align-items: center; justify-content: center;">
+                {{item.productDetails.in_stock}}
+              </ion-col>
+            </ion-row>
+          </ng-template>
+        </ng-container>
+      </ion-grid> -->
+      <ion-item lines="none" *ngIf="orderDetails?.voucherInfo as voucherInfo">
+        <ion-icon name="reader-outline" slot="start"></ion-icon>
+        <ion-label>
+          <h1 *ngIf="voucherInfo.voucherDiscountType === 'flat'">
+            {{voucherInfo.voucherCode}}  -{{voucherInfo.voucherDiscountValue | currency:"PHP"}}
+          </h1>
+          <h1 *ngIf="voucherInfo.voucherDiscountType === 'percentage'">
+            {{voucherInfo.voucherCode}}  -{{voucherInfo.voucherDiscountValue}}%
+          </h1>
+          <h3>
+            Applied Voucher
+          </h3>
+        </ion-label>
+       </ion-item>
+
+      <div style="display: flex;  padding: 10px; align-items: center;">
+        <h1 style="margin: 0;">
+          Total Payment : {{paymentData() + (orderData.deliveryMethod =='delivery'? orderData.deliveryFee:0)| currency: "PHP"}}
+        </h1>
+      </div>
+
+      <ng-container *ngIf="orderDetails?.paypalData as payPalData; else cashOn">
+        <h2>
+          Paid via Paypal
+        </h2>
+        <ion-item lines="none">
+          <ion-icon slot="start" name="logo-paypal"></ion-icon>
+          <ion-label>
+            <h4>
+              Transaction ID: {{payPalData.transactionID}}
+            </h4>
+            <p >
+              Paid by: {{payPalData.payer ?? payPalData.email}}
+            </p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+      <ng-template #cashOn>
+        <ion-item lines="none" *ngIf="orderDetails?.deliveryMethod =='delivery'; else pickup">
+          <ion-icon slot="start" name="cash-outline"></ion-icon>
+          <ion-label>
+            <h2>
+              Cash on Delivery
+            </h2>
+          </ion-label>
+        </ion-item>
+        <ng-template #pickup>
+          <ion-item lines="none" >
+            <ion-icon slot="start" name="hand-left-outline"></ion-icon>
+            <ion-label>
+              <h2>
+                Cash on Pickup
+              </h2>
+            </ion-label>
+          </ion-item>
+        </ng-template>
+      </ng-template>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{statusName}}</ion-card-title>
+      <ion-card-subtitle>Status</ion-card-subtitle>
+    </ion-card-header>
+
+    <div *ngIf="orderDetails?.pickupImage" class="ion-padding" style="display: flex; flex-direction: column; align-items: center;">
+      <h1>
+        Pickup Image
+      </h1>
+      <img [src]="orderDetails.pickupImage" style="max-height: 150px;">
+    </div>
+
+    <div *ngIf="orderDetails?.deliveryImage" class="ion-padding" style="display: flex; flex-direction: column; align-items: center;">
+      <h1>
+        Delivery Image
+      </h1>
+      <img [src]="orderDetails.deliveryImage" style="max-height: 150px;">
+    </div>
+    <ion-card-content *ngIf="(riderDetails$ | async) as riderDetails; else elseBlock">
+
+      <h1>
+        Rider Details
+      </h1>
+      <h4>
+        Name: {{riderDetails.fullname.first}} {{riderDetails.fullname.middleInitial}} {{riderDetails.fullname.last}}
+      </h4>
+      <app-map *ngIf="onDelivery && orderDetails?.deliveryMethod === 'delivery'" 
+              [clientAddressPosition]="orderDetails?.address.coordinates"
+              [storePosition]="storeCoordinates"
+              [riderPosition]="(riderRTLocation | async)!">
+
+      </app-map>
+
+    </ion-card-content>
+    <ng-template #elseBlock>
+      <ion-card-content *ngIf="orderDetails?.paymentMethod ==='delivery'">
+        <h1>
+          No Rider has Accepted Yet
+        </h1>
+      </ion-card-content>
+    </ng-template>
+  </ion-card>
+
+</ion-content>
